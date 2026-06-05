@@ -3,7 +3,7 @@ RUN apk --update add ca-certificates
 
 FROM scratch
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY device-portal /
+COPY machine-portal /
 COPY web/templates/ /web/templates
 ENV TEMPLATES_PATH=/web/templates
-ENTRYPOINT ["/device-portal"]
+ENTRYPOINT ["/machine-portal"]

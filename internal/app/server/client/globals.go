@@ -6,9 +6,9 @@ import (
 	"github.com/sargassum-world/godest"
 	"github.com/sargassum-world/godest/clientcache"
 
-	"github.com/openUC2/device-portal/internal/app/server/conf"
-	"github.com/openUC2/device-portal/internal/clients/machinename"
-	"github.com/openUC2/device-portal/internal/clients/templates"
+	"github.com/openUC2/machine-portal/internal/app/server/conf"
+	"github.com/openUC2/machine-portal/internal/clients/machinename"
+	"github.com/openUC2/machine-portal/internal/clients/templates"
 )
 
 type BaseGlobals struct {

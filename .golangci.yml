@@ -55,10 +55,10 @@ formatters:
       sections:
         - standard
         - default
-        - prefix(github.com/openUC2/device-portal)
+        - prefix(github.com/openUC2/machine-portal)
     goimports:
       local-prefixes:
-        - github.com/openUC2/device-portal
+        - github.com/openUC2/machine-portal
   exclusions:
     generated: lax
     paths:

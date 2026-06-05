@@ -1,4 +1,4 @@
-// Package server provides the ImSwitch OS device-portal server.
+// Package server provides the openUC2 OS machine-portal server.
 package server
 
 import (
@@ -17,12 +17,12 @@ import (
 	"github.com/unrolled/secure/cspbuilder"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/openUC2/device-portal/internal/app/server/client"
-	"github.com/openUC2/device-portal/internal/app/server/conf"
-	"github.com/openUC2/device-portal/internal/app/server/routes"
-	"github.com/openUC2/device-portal/internal/app/server/routes/assets"
-	"github.com/openUC2/device-portal/internal/app/server/tmplfunc"
-	"github.com/openUC2/device-portal/web"
+	"github.com/openUC2/machine-portal/internal/app/server/client"
+	"github.com/openUC2/machine-portal/internal/app/server/conf"
+	"github.com/openUC2/machine-portal/internal/app/server/routes"
+	"github.com/openUC2/machine-portal/internal/app/server/routes/assets"
+	"github.com/openUC2/machine-portal/internal/app/server/tmplfunc"
+	"github.com/openUC2/machine-portal/web"
 )
 
 type Server struct {
@@ -177,7 +177,7 @@ func (s *Server) Register(e *echo.Echo) error {
 // Running
 
 func (s *Server) Run(e *echo.Echo) error {
-	s.Globals.Base.Logger.Info("starting device-portal server")
+	s.Globals.Base.Logger.Info("starting machine-portal server")
 
 	// The echo http server can't be canceled by context cancelation, so the API shouldn't promise to
 	// stop blocking execution on context cancelation - so we use the background context here. The
