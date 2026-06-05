@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sargassum-world/godest"
 
-	sh "github.com/openUC2/device-portal/internal/app/server/handling"
-	"github.com/openUC2/device-portal/internal/clients/machinename"
+	sh "github.com/openUC2/machine-portal/internal/app/server/handling"
+	"github.com/openUC2/machine-portal/internal/clients/machinename"
 )
 
 type Handlers struct {

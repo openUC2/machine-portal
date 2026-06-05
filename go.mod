@@ -1,4 +1,4 @@
-module github.com/openUC2/device-portal
+module github.com/openUC2/machine-portal
 
 go 1.26
 

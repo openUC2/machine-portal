@@ -13,8 +13,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/urfave/cli/v3"
 
-	"github.com/openUC2/device-portal/internal/app/server"
-	"github.com/openUC2/device-portal/internal/app/server/conf"
+	"github.com/openUC2/machine-portal/internal/app/server"
+	"github.com/openUC2/machine-portal/internal/app/server/conf"
 )
 
 func main() {
@@ -29,7 +29,7 @@ const (
 )
 
 var cmd = &cli.Command{
-	Name:    "device-portal",
+	Name:    "machine-portal",
 	Version: toolVersion,
 	Usage:   "Provides a landing page",
 	Action:  serverMain,
