@@ -1,0 +1,124 @@
+{{template "shared/base.layout.tmpl" .}}
+
+{{define "title" -}}
+  {{- $machineName := .Data.MachineName -}}
+  Machine {{$machineName}}
+{{- end}}
+{{define "description"}}Machine portal{{end}}
+
+{{define "content"}}
+  {{$hostname := .Data.Hostname}}
+  {{$port := .Data.Port}}
+  {{$machineName := .Data.MachineName}}
+
+  <main>
+    <section class="section">
+      <div class="container content is-max-desktop">
+        <h1>Machine {{$machineName}}</h1>
+        <p>
+          Welcome! This is the home page for your machine with machine name
+          <code>{{$machineName}}</code>.
+        </p>
+
+        <article class="message is-info two-card-width">
+          <div class="message-body">
+            This is the full view of the home page. If it's too overwhelming, you can instead open the
+            <a href="{{urlJoin (dict
+              "path" .Meta.Path
+              "query" (.Meta.Form.Without "mode").Encode
+            )}}">simplified view</a> of this page.
+          </div>
+        </article>
+
+        <p>
+          Below you can find a list of links to browser applications provided by your machine,
+          documentation for operating your machine,
+          and other information to help you use your machine.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content is-max-desktop">
+        <h2>Browser applications</h2>
+        <p>(no browser applications have been registered yet!)</p>
+      </div>
+    </section>
+
+    <section class="section is-large">
+      <div class="container content is-max-desktop">
+        <h2>Need help?</h2>
+
+        <h3 class="is-size-5">Wrong machine?</h3>
+        <p>
+          This machine has machine name <code>{{$machineName}}</code>. If you're looking for a
+          different machine:
+        </p>
+        <ul>
+          <li>
+            You should use your web browser to open that machine's machine-specific URL
+            instead.
+            {{if hasSuffix ".uc2" $hostname}}
+              For example, the machine-specific URL for this machine is
+              <a href="//{{$machineName}}.uc2">
+                {{- /* make template ignore the line break */ -}}
+                {{$machineName}}.uc2
+                {{- /* make template ignore the line break */ -}}
+              </a>.
+              Alternatively,
+              <a href="//openuc2-{{$machineName}}.local">
+                {{- /* make template ignore the line break */ -}}
+                openuc2-{{$machineName}}.local
+                {{- /* make template ignore the line break */ -}}
+              </a>
+              might also work if your web browser supports mDNS.
+            {{else if hasSuffix ".local" $hostname}}
+              For example, the machine-specific URL for this machine is
+              <a href="//openuc2-{{$machineName}}.local">
+                {{- /* make template ignore the line break */ -}}
+                openuc2-{{$machineName}}.local
+                {{- /* make template ignore the line break */ -}}
+              </a>.
+              Alternatively,
+              <a href="//{{$machineName}}.uc2">
+                {{- /* make template ignore the line break */ -}}
+                {{$machineName}}.uc2
+                {{- /* make template ignore the line break */ -}}
+              </a>
+              might also work if you're connecting directly to your machine (i.e. to its
+              Ethernet port or to a Wi-Fi network created by your machine) and your web browser
+              isn't using Private DNS to look up domain names.
+            {{end}}
+          </li>
+          <li>
+            {{if hasSuffix ".uc2" $hostname}}
+              You're probably trying to connect directly to your machine (i.e. to its Ethernet
+              port or to a Wi-Fi network created by that machine). You
+            {{else}}
+              If you're trying to connect directly to a different machine (i.e. to its Ethernet
+              port or to a Wi-Fi network created by that machine), you
+            {{end}}
+            might need to change your
+            network configuration in order to connect to that machine's Wi-Fi network or
+            Ethernet port, and you might also need to disconnect from
+            <code>{{$machineName}}</code>'s Wi-Fi network or Ethernet port.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section is-large">
+      <div class="container content is-max-desktop">
+        <h2>For advanced users</h2>
+        <h3 class="is-size-5">Browser applications</h3>
+        <p>(no browser applications have been registered yet!)</p>
+
+        <h3 class="is-size-5">Network APIs</h3>
+        <p>(no network APIs have been registered yet!)</p>
+
+        <h3 class="is-size-5">System infrastructure</h3>
+        <p>(no system infrastructure components have been registered yet!)</p>
+      </div>
+    </section>
+  </main>
+{{end}}
