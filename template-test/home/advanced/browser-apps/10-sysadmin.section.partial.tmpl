@@ -1,27 +1,7 @@
 <p>System administration and troubleshooting:</p>
 <ul>
-  <li>
-    <strong><a href="/admin/panel/?mode=advanced" target="_blank">Machine Administration (advanced mode)</a></strong>:
-    The main system-administration dashboard for this machine, with advanced information and
-    settings exposed
-  </li>
-  <li>
-    <strong><a href="/admin/cockpit/" target="_blank">Cockpit</a></strong>:
-    An advanced system administration dashboard for the computer embedded in this
-    machine
-  </li>
-  <li>
-    <strong><a href="/admin/fs/files/home/pi" target="_blank">User file manager</a></strong>:
-    A file browsing and management interface for the entire filesystem of the
-    computer embedded in this machine
-  </li>
-  <li>
-    <strong><a href="/admin/fs-su/" target="_blank">System file manager</a></strong>:
-    A file browsing and management interface for the entire filesystem of the
-    computer embedded in this machine, with root/superuser access
-  </li>
-  <li>
-    <strong><a href="/admin/dozzle/" target="_blank">Dozzle</a></strong>:
-    A dashboard for monitoring and troubleshooting the apps deployed on this machine
-  </li>
+  {{$data := .}}
+  {{range $template := templates "home/advanced/browser-apps/sysadmin/*.item.partial.tmpl"}}
+    {{partial $template $data}}
+  {{end}}
 </ul>
