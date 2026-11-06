@@ -2,8 +2,10 @@
 package server
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"html/template"
 	"net/http"
 
 	"github.com/Masterminds/sprig/v3"
@@ -49,6 +51,7 @@ func New(config conf.Config, logger godest.Logger) (s *Server, err error) {
 	if s.Renderer, err = godest.NewLazyTemplateRenderer(
 		s.Embeds, s.Inlines, sprig.FuncMap(), tmplfunc.FuncMap(
 			tmplfunc.NewHashedNamers(assets.AppURLPrefix, assets.StaticURLPrefix, s.Embeds),
+			s.Embeds.TemplatesFS, s.renderPartial,
 		),
 	); err != nil {
 		return nil, errors.Wrap(err, "couldn't make template renderer")
@@ -56,6 +59,15 @@ func New(config conf.Config, logger godest.Logger) (s *Server, err error) {
 
 	s.Handlers = routes.New(s.Renderer, s.Globals)
 	return s, err
+}
+
+func (s *Server) renderPartial(name string, data any) (template.HTML, error) {
+	buf := bytes.NewBuffer([]byte{})
+	err := s.Renderer.WritePartial(buf, name, data)
+	if err != nil {
+		return "", err
+	}
+	return template.HTML(buf.String()), nil //nolint:gosec // the attacker doesn't control this input
 }
 
 // Echo
@@ -102,32 +114,38 @@ const turboDriveStyle = `.turbo-progress-bar {
 }
 `
 
+const (
+	cspNone         = "'none'"
+	cspSelf         = "'self'"
+	cspUnsafeInline = "'unsafe-inline'"
+)
+
 func (s *Server) configureHeaders(e *echo.Echo) error {
 	cspBuilder := cspbuilder.Builder{
 		Directives: map[string][]string{
-			cspbuilder.DefaultSrc: {"'self'"},
+			cspbuilder.DefaultSrc: {cspSelf},
 			cspbuilder.ScriptSrc: append(
 				// Warning: script-src 'self' may not be safe to use if we're hosting user-uploaded content.
 				// Then we'll need to provide hashes for scripts & styles we include by URL, and we'll need
 				// to add the SRI integrity attribute to the tags including those files; however, it's
 				// unclear how well-supported they are by browsers.
-				[]string{"'self'", "'unsafe-inline'"},
+				[]string{cspSelf, cspUnsafeInline},
 				s.Inlines.ComputeJSHashesForCSP()...,
 			),
 			cspbuilder.StyleSrc: append(
 				[]string{
-					"'self'",
-					"'unsafe-inline'",
+					cspSelf,
+					cspUnsafeInline,
 					godest.ComputeCSPHash([]byte(turboDriveStyle)),
 				},
 				s.Inlines.ComputeCSSHashesForCSP()...,
 			),
-			cspbuilder.ObjectSrc:      {"'none'"},
-			cspbuilder.ChildSrc:       {"'self'"},
+			cspbuilder.ObjectSrc:      {cspNone},
+			cspbuilder.ChildSrc:       {cspSelf},
 			cspbuilder.ImgSrc:         {"*"},
-			cspbuilder.BaseURI:        {"'none'"},
-			cspbuilder.FormAction:     {"'self'"},
-			cspbuilder.FrameAncestors: {"'none'"},
+			cspbuilder.BaseURI:        {cspNone},
+			cspbuilder.FormAction:     {cspSelf},
+			cspbuilder.FrameAncestors: {cspNone},
 			// TODO: add HTTPS-related settings for CSP, including upgrade-insecure-requests
 		},
 	}
