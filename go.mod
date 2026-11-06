@@ -1,10 +1,11 @@
 module github.com/openUC2/machine-portal
 
-go 1.26
+go 1.27.3
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/benbjohnson/hashfs v0.2.2
+	github.com/bmatcuk/doublestar/v4 v4.9.1
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/labstack/echo/v4 v4.14.0
@@ -123,7 +124,6 @@ require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/blizzy78/varnamelen v0.8.0 // indirect
 	github.com/bluesky-social/indigo v0.0.0-20240813042137-4006c0eca043 // indirect
-	github.com/bmatcuk/doublestar/v4 v4.9.1 // indirect
 	github.com/bombsimon/wsl/v4 v4.7.0 // indirect
 	github.com/bombsimon/wsl/v5 v5.2.0 // indirect
 	github.com/breml/bidichk v0.3.3 // indirect

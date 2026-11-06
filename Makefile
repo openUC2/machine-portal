@@ -40,7 +40,7 @@ vet: ## go vet
 fix: ## go fix
 	$(call print-target)
 	go fix ./...
-cd web/app && pnpm run lint:fix
+	cd web/app && pnpm run lint:fix
 
 .PHONY: fmt
 fmt: ## go fmt

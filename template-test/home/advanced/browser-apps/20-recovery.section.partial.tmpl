@@ -1,0 +1,13 @@
+{{$hostname := .Data.Hostname}}
+
+<p>System recovery:</p>
+<ul>
+  <li>
+    <strong><a href="//{{$hostname}}:9090/admin/cockpit/" target="_blank">
+      Cockpit (direct-access fallback)
+      {{- /* make template ignore the line break */ -}}
+    </a></strong>:
+    Fallback access to the Cockpit application, accessible even if the system's
+    service proxy stops working
+  </li>
+</ul>

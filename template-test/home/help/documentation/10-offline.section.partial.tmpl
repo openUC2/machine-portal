@@ -1,0 +1,7 @@
+<p>Accessible offline:</p>
+<ul>
+  {{$data := .}}
+  {{range $template := templates "home/help/documentation/offline/*.item.partial.tmpl"}}
+    {{partial $template $data}}
+  {{end}}
+</ul>

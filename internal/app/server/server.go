@@ -2,8 +2,10 @@
 package server
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"html/template"
 	"net/http"
 
 	"github.com/Masterminds/sprig/v3"
@@ -49,6 +51,7 @@ func New(config conf.Config, logger godest.Logger) (s *Server, err error) {
 	if s.Renderer, err = godest.NewLazyTemplateRenderer(
 		s.Embeds, s.Inlines, sprig.FuncMap(), tmplfunc.FuncMap(
 			tmplfunc.NewHashedNamers(assets.AppURLPrefix, assets.StaticURLPrefix, s.Embeds),
+			s.Embeds.TemplatesFS, s.renderPartial,
 		),
 	); err != nil {
 		return nil, errors.Wrap(err, "couldn't make template renderer")
@@ -56,6 +59,15 @@ func New(config conf.Config, logger godest.Logger) (s *Server, err error) {
 
 	s.Handlers = routes.New(s.Renderer, s.Globals)
 	return s, err
+}
+
+func (s *Server) renderPartial(name string, data any) (template.HTML, error) {
+	buf := bytes.NewBuffer([]byte{})
+	err := s.Renderer.WritePartial(buf, name, data)
+	if err != nil {
+		return "", err
+	}
+	return template.HTML(buf.String()), nil
 }
 
 // Echo

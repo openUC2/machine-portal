@@ -1,0 +1,7 @@
+<p>On the internet:</p>
+<ul>
+  {{$data := .}}
+  {{range $template := templates "home/help/documentation/online/*.item.partial.tmpl"}}
+    {{partial $template $data}}
+  {{end}}
+</ul>
