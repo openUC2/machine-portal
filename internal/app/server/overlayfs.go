@@ -3,8 +3,6 @@ package server
 import (
 	"cmp"
 	"io/fs"
-	"iter"
-	"maps"
 	"path"
 	"slices"
 
@@ -34,7 +32,7 @@ func (f *OverlayFS) Open(name string) (fs.File, error) {
 	switch {
 	default:
 		return nil, &fs.PathError{
-			Op:   "open",
+			Op:   PathErrorOpOpen,
 			Path: name,
 			Err:  errors.Wrapf(err, "couldn't open file %s in upper", name),
 		}
@@ -42,7 +40,7 @@ func (f *OverlayFS) Open(name string) (fs.File, error) {
 		file, err = f.Lower.Open(name)
 		if err != nil {
 			return nil, &fs.PathError{
-				Op:   "open",
+				Op:   PathErrorOpOpen,
 				Path: name,
 				Err:  errors.Wrapf(err, "couldn't open file %s in lower", name),
 			}
@@ -91,14 +89,14 @@ func (f *OverlayFS) ReadDir(name string) (entries []fs.DirEntry, err error) {
 	if err == nil {
 		if !info.IsDir() {
 			return nil, &fs.PathError{
-				Op:   "read",
+				Op:   PathErrorOpRead,
 				Path: name,
 				Err:  errors.Wrapf(err, "%s is a non-directory file in upper", name),
 			}
 		}
 		if entries, err = fs.ReadDir(f.Upper, name); err != nil {
 			return nil, &fs.PathError{
-				Op:   "read",
+				Op:   PathErrorOpRead,
 				Path: name,
 				Err:  errors.Wrapf(err, "couldn't read directory %s in upper", name),
 			}
@@ -112,7 +110,7 @@ func (f *OverlayFS) ReadDir(name string) (entries []fs.DirEntry, err error) {
 	if err == nil {
 		if !info.IsDir() {
 			return nil, &fs.PathError{
-				Op:   "read",
+				Op:   PathErrorOpRead,
 				Path: name,
 				Err:  errors.Wrapf(err, "%s is a non-directory file in lower", name),
 			}
@@ -120,7 +118,7 @@ func (f *OverlayFS) ReadDir(name string) (entries []fs.DirEntry, err error) {
 		lowerEntries, err := fs.ReadDir(f.Lower, name)
 		if err != nil {
 			return nil, &fs.PathError{
-				Op:   "read",
+				Op:   PathErrorOpRead,
 				Path: name,
 				Err:  errors.Wrapf(err, "couldn't read directory %s in lower", name),
 			}
@@ -177,7 +175,7 @@ func (f *OverlayFS) Stat(name string) (fs.FileInfo, error) {
 	switch {
 	default:
 		return nil, &fs.PathError{
-			Op:   "stat",
+			Op:   PathErrorOpStat,
 			Path: name,
 			Err:  errors.Wrapf(err, "couldn't stat file %s in upper", name),
 		}
@@ -185,7 +183,7 @@ func (f *OverlayFS) Stat(name string) (fs.FileInfo, error) {
 		info, err := fs.Stat(f.Lower, name)
 		if err != nil {
 			return nil, &fs.PathError{
-				Op:   "stat",
+				Op:   PathErrorOpStat,
 				Path: name,
 				Err:  errors.Wrapf(err, "couldn't stat file %s in lower", name),
 			}
@@ -194,38 +192,4 @@ func (f *OverlayFS) Stat(name string) (fs.FileInfo, error) {
 	case err == nil:
 		return info, nil
 	}
-}
-
-// Set
-
-type Set[Node comparable] map[Node]struct{}
-
-// Add adds the node to the set. If the node was already in the set, nothing changes.
-func (s Set[Node]) Add(n ...Node) {
-	for _, node := range n {
-		s[node] = struct{}{}
-	}
-}
-
-// Has checks whether the node is already in the set.
-func (s Set[Node]) Has(n Node) bool {
-	_, ok := s[n]
-	return ok
-}
-
-// Difference creates a new set with the difference between the set whose method is called and the
-// provided set.
-func (s Set[Node]) Difference(t Set[Node]) Set[Node] {
-	difference := make(Set[Node])
-	for node := range s {
-		if !t.Has(node) {
-			difference.Add(node)
-		}
-	}
-	return difference
-}
-
-// All returns an iterator over all elements in s.
-func (s Set[Node]) All() iter.Seq[Node] {
-	return maps.Keys(s)
 }
