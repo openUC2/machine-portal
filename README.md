@@ -98,6 +98,12 @@ TEMPLATES_PATH=custom-templates MACHINENAME_NAME=template-test make run
 
 Note that running `make runlive` will cause your `TEMPLATES_PATH` environment variable to be ignored, so that the templates directory at `web/templates` (relative to the root of this repository) is always used.
 
+You can also provide multiple directories delimited by colons, for example:
+```bash
+TEMPLATES_PATH=~/.local/share/machine-portal/template-overrides:custom-templates MACHINENAME_NAME=template-test ./machine-portal
+```
+Then the directories will be overlaid (like in Linux overlay filesystems) from left to right, with the leftmost directory on top.
+
 ## Licensing
 
 Except where otherwise indicated, source code provided here is covered by the following information:

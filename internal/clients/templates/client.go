@@ -17,9 +17,25 @@ func NewClient(c Config) *Client {
 }
 
 func (c *Client) GetFS() fs.FS {
-	path := c.Config.Path
-	if path == "" {
+	paths := c.Config.Paths
+	switch len(paths) {
+	case 0:
 		return nil
+	case 1:
+		return os.DirFS(paths[0])
 	}
-	return os.DirFS(path)
+
+	overlay := &OverlayFS{}
+	suboverlay := overlay
+	for i, path := range paths {
+		suboverlay.Upper = os.DirFS(path)
+		if i+1 == len(paths)-1 {
+			suboverlay.Lower = os.DirFS(paths[i+1])
+			break
+		}
+		nextSuboverlay := &OverlayFS{}
+		suboverlay.Lower = nextSuboverlay
+		suboverlay = nextSuboverlay
+	}
+	return overlay
 }
