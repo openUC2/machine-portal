@@ -24,6 +24,7 @@ import (
 	"github.com/openUC2/machine-portal/internal/app/server/routes"
 	"github.com/openUC2/machine-portal/internal/app/server/routes/assets"
 	"github.com/openUC2/machine-portal/internal/app/server/tmplfunc"
+	"github.com/openUC2/machine-portal/internal/clients/templates"
 	"github.com/openUC2/machine-portal/web"
 )
 
@@ -42,7 +43,7 @@ func New(config conf.Config, logger godest.Logger) (s *Server, err error) {
 	}
 
 	s.Embeds = web.NewEmbeds()
-	templatesOverlay := &OverlayFS{
+	templatesOverlay := &templates.OverlayFS{
 		Upper: s.Globals.Base.Templates.GetFS(),
 		Lower: s.Embeds.TemplatesFS,
 	}
